@@ -71,42 +71,49 @@ if st.button("Calcola combinazione ottimale"):
             for name, date in sorted(scored_combinations[0][0], key=lambda x: datetime.strptime(x[1], "%d %B %Y")):
                 st.write(f"- {name}: {date}")
             st.write(f"Totale importanza: **{scored_combinations[0][1]}**")
+
+            # Spiegazione del criterio
+            st.info("ℹ️ Le combinazioni sono ordinate in base alla somma dei punteggi di importanza degli esami, mantenendo la distanza minima tra le date.")
+
+            # Altre combinazioni
+            st.markdown("### 📋 Altre combinazioni possibili:")
+            for combo, score in scored_combinations[1:]:
+                combo_sorted = sorted(combo, key=lambda x: datetime.strptime(x[1], "%d %B %Y"))
+                combo_str = ", ".join([f"{n}: {d}" for n, d in combo_sorted])
+                st.write(f"- {combo_str} → importanza: {score}")
+
+            # Esportazione
+            from fpdf import FPDF
+            import io
+
+            def salva_risultati_txt(scored_combinations):
+                output = "✅ Combinazione ottimale:\n"
+                for name, date in sorted(scored_combinations[0][0], key=lambda x: datetime.strptime(x[1], "%d %B %Y")):
+                    output += f"- {name}: {date}\n"
+                output += f"Totale importanza: {scored_combinations[0][1]}\n\n"
+                output += "📋 Altre combinazioni:\n"
+                for combo, score in scored_combinations[1:]:
+                    combo_sorted = sorted(combo, key=lambda x: datetime.strptime(x[1], "%d %B %Y"))
+                    combo_str = ", ".join([f"{n}: {d}" for n, d in combo_sorted])
+                    output += f"- {combo_str} → importanza: {score}\n"
+                return output
+
+            def salva_risultati_pdf(text):
+                pdf = FPDF()
+                pdf.add_page()
+                pdf.set_font("Arial", size=12)
+                for line in text.split("\n"):
+                    pdf.cell(200, 10, txt=line, ln=True)
+                buffer = io.BytesIO()
+                pdf.output(buffer)
+                buffer.seek(0)
+                return buffer.read()
+
+            txt_output = salva_risultati_txt(scored_combinations)
+            pdf_output = salva_risultati_pdf(txt_output)
+
+            st.download_button("📄 Scarica risultati in TXT", txt_output, file_name="risultati_esami.txt")
+            st.download_button("📄 Scarica risultati in PDF", pdf_output, file_name="risultati_esami.pdf", mime="application/pdf")
         else:
             st.error("❌ Nessuna combinazione soddisfa i criteri.")
-    except Exception as e:
-        st.error(f"Errore: {str(e)}")
-from fpdf import FPDF
-import io
-
-def salva_risultati_txt(scored_combinations):
-    output = "✅ Combinazione ottimale:\n"
-    for name, date in sorted(scored_combinations[0][0], key=lambda x: datetime.strptime(x[1], "%d %B %Y")):
-        output += f"- {name}: {date}\n"
-    output += f"Totale importanza: {scored_combinations[0][1]}\n\n"
-
-    output += "📋 Altre combinazioni:\n"
-    for combo, score in scored_combinations[1:]:
-        combo_sorted = sorted(combo, key=lambda x: datetime.strptime(x[1], "%d %B %Y"))
-        combo_str = ", ".join([f"{n}: {d}" for n, d in combo_sorted])
-        output += f"- {combo_str} → importanza: {score}\n"
-    return output
-
-def salva_risultati_pdf(text):
-    pdf = FPDF()
-    pdf.add_page()
-    pdf.set_font("Arial", size=12)
-    for line in text.split("\n"):
-        pdf.cell(200, 10, txt=line, ln=True)
-    buffer = io.BytesIO()
-    pdf.output(buffer)
-    return buffer.getvalue()
-
-# Genera risultati
-txt_output = salva_risultati_txt(scored_combinations)
-pdf_output = salva_risultati_pdf(txt_output)
-
-# Download link
-st.download_button("📄 Scarica risultati in TXT", txt_output, file_name="risultati_esami.txt")
-st.download_button("📄 Scarica risultati in PDF", pdf_output, file_name="risultati_esami.pdf")
-
-
+       
