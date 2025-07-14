@@ -67,16 +67,16 @@ if st.button("Calcola combinazione ottimale"):
         scored_combinations.sort(key=lambda x: x[1], reverse=True)
 
         if scored_combinations:
-            st.success("✅ Combinazione ottimale trovata:")
+            st.success(" Combinazione ottimale trovata:")
             for name, date in sorted(scored_combinations[0][0], key=lambda x: datetime.strptime(x[1], "%d %B %Y")):
                 st.write(f"- {name}: {date}")
             st.write(f"Totale importanza: **{scored_combinations[0][1]}**")
 
             # Spiegazione del criterio
-            st.info("ℹ️ Le combinazioni sono ordinate in base alla somma dei punteggi di importanza degli esami, mantenendo la distanza minima tra le date.")
+            st.info(" Le combinazioni sono ordinate in base alla somma dei punteggi di importanza degli esami, mantenendo la distanza minima tra le date.")
 
             # Altre combinazioni
-            st.markdown("### 📋 Altre combinazioni possibili:")
+            st.markdown("###  Altre combinazioni possibili:")
             for combo, score in scored_combinations[1:]:
                 combo_sorted = sorted(combo, key=lambda x: datetime.strptime(x[1], "%d %B %Y"))
                 combo_str = ", ".join([f"{n}: {d}" for n, d in combo_sorted])
@@ -87,11 +87,11 @@ if st.button("Calcola combinazione ottimale"):
             import io
 
             def salva_risultati_txt(scored_combinations):
-                output = "✅ Combinazione ottimale:\n"
+                output = "Combinazione ottimale:\n"
                 for name, date in sorted(scored_combinations[0][0], key=lambda x: datetime.strptime(x[1], "%d %B %Y")):
                     output += f"- {name}: {date}\n"
                 output += f"Totale importanza: {scored_combinations[0][1]}\n\n"
-                output += "📋 Altre combinazioni:\n"
+                output += " Altre combinazioni:\n"
                 for combo, score in scored_combinations[1:]:
                     combo_sorted = sorted(combo, key=lambda x: datetime.strptime(x[1], "%d %B %Y"))
                     combo_str = ", ".join([f"{n}: {d}" for n, d in combo_sorted])
