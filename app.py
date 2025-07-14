@@ -105,10 +105,9 @@ if st.button("Calcola combinazione ottimale"):
                 pdf.set_font("Arial", size=12)
                 for line in text.split("\n"):
                     pdf.cell(200, 10, txt=line, ln=True)
-                buffer = io.BytesIO()
-                pdf.output(buffer)
-                buffer.seek(0)
-                return buffer.read()
+                pdf_bytes = pdf.output(dest='S').encode('latin-1')
+                return io.BytesIO(pdf_bytes)
+
 
             txt_output = salva_risultati_txt(scored_combinations)
             pdf_output = salva_risultati_pdf(txt_output)
