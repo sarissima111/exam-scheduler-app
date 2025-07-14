@@ -18,7 +18,7 @@ def parse_date(data_str):
     anno = parts[2]
     return datetime.strptime(f"{giorno}-{mese}-{anno}", "%d-%m-%Y")
 
-st.title("📚 Pianificatore Esami Universitari")
+st.title(" Pianificatore Esami Universitari")
 
 num_exams = st.number_input("Quanti esami devi sostenere?", min_value=1, max_value=10, step=1)
 exams = []
@@ -95,7 +95,8 @@ if st.button("Calcola combinazione ottimale"):
                 for combo, score in scored_combinations[1:]:
                     combo_sorted = sorted(combo, key=lambda x: datetime.strptime(x[1], "%d %B %Y"))
                     combo_str = ", ".join([f"{n}: {d}" for n, d in combo_sorted])
-                    output += f"- {combo_str} → importanza: {score}\n"
+                    output += f"- {combo_str} -> importanza: {score}\n"
+
                 return output
 
             def salva_risultati_pdf(text):
