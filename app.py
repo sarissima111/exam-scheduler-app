@@ -117,3 +117,5 @@ if st.button("Calcola combinazione ottimale"):
         else:
             st.error("❌ Nessuna combinazione soddisfa i criteri.")
        
+    except Exception as e:
+          st.error(f"Errore durante l'elaborazione: {e}")
